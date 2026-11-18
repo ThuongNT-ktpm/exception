@@ -67,7 +67,7 @@ export default function LetterScreen({ config, onPlayVideo, onPauseVideo }) {
               <video
                 controls
                 playsInline
-                preload="metadata"
+                preload="auto"
                 className="w-full rounded-xl md:rounded-2xl shadow-md overflow-hidden bg-black aspect-video object-cover"
                 src={videoSrc}
                 onPlay={handlePlay}

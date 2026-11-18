@@ -147,6 +147,15 @@ export default function App() {
     };
   }, [config.music]);
 
+  // Tải trước (preload) video ngầm ngay khi vào trang web (trong lúc người dùng trả lời câu hỏi và nhập PIN)
+  useEffect(() => {
+    const video = document.createElement("video");
+    video.src = config.videoSrc || "./TAM_SU_BAN_GAI_MUSIC_VIDEO.mp4";
+    video.preload = "auto";
+    video.muted = true;
+    video.load();
+  }, [config.videoSrc]);
+
   if (isLoading) {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-pink-100 via-white to-pink-100">
