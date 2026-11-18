@@ -52,7 +52,7 @@ export const defaultSettings = {
   pinPreview: "2705 hoặc 2809",
   images: ["./anh5.jpeg", "./anh6.jpeg", "./anh7.jpeg"],
   music: "./assets/Tran_bo_nho.mp3",
-  videoSrc: "./video.mp4",
+  videoSrc: "./TAM_SU_BAN_GAI_MUSIC_VIDEO.mp4",
   bearRoseGif: "./assets/cute-love-bear-roses-ou7zho5oosxnpo6k.gif",
   bearPinGif: "./bear2.gif",
   bearSuccessGif: "./bear3.gif"

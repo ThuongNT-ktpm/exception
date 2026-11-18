@@ -1,28 +1,45 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import FloatingHearts from './FloatingHearts';
+import RomanticDecoration from './RomanticDecoration';
 
-export default function LetterScreen({ config }) {
-  const [videoSrc, setVideoSrc] = useState(config.videoSrc || "./video.mp4");
+export default function LetterScreen({ config, onPlayVideo, onPauseVideo }) {
+  const [videoSrc, setVideoSrc] = useState(
+    config.videoSrc || "./TAM_SU_BAN_GAI_MUSIC_VIDEO.mp4"
+  );
   const [videoError, setVideoError] = useState(false);
-  const fileInputRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setVideoSrc(url);
-      setVideoError(false);
+  const handlePlay = (e) => {
+    setIsPlaying(true);
+    onPlayVideo?.(e);
+  };
+
+  const handlePause = (e) => {
+    setIsPlaying(false);
+    onPauseVideo?.(e);
+  };
+
+  const handleVideoError = () => {
+    if (videoSrc !== "./video.mp4") {
+      setVideoSrc("./video.mp4");
+    } else {
+      setVideoError(true);
     }
   };
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-b from-pink-200 via-pink-100 to-rose-200 relative overflow-hidden flex flex-col items-center justify-center px-4 py-6 select-none">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-pink-200 via-pink-100 to-rose-200 relative overflow-hidden flex flex-col items-center justify-center px-4 py-6 md:py-8 select-none safe-area">
+      {/* Mưa trái tim bay */}
       <FloatingHearts />
 
-      <div className="relative z-10 w-full max-w-md flex flex-col items-center animate-fade-in">
+      {/* Dây hoa hồng leo, Đèn đom đóm Fairy Lights, Cupid bay & Cặp Pet thông minh phản ứng theo video */}
+      <RomanticDecoration isPlaying={isPlaying} />
+
+      {/* Khung nội dung chính */}
+      <div className="relative z-10 w-full max-w-[360px] sm:max-w-lg md:max-w-2xl flex flex-col items-center animate-fade-in">
         {/* Tiêu đề chính */}
         <h1
-          className="text-3xl sm:text-5xl font-bold text-rose-600 mb-1 text-center drop-shadow-sm leading-tight"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-rose-600 mb-1 md:mb-1.5 text-center drop-shadow-sm leading-tight"
           style={{ fontFamily: "'Dancing Script', cursive" }}
         >
           {config.letterTitle || "Gửi mắm thúiiiii"}
@@ -30,81 +47,64 @@ export default function LetterScreen({ config }) {
 
         {/* Tiêu đề phụ */}
         <p
-          className="text-pink-400 text-xs sm:text-sm mb-3 italic text-center"
+          className="text-pink-400 text-xs sm:text-sm md:text-base mb-3 md:mb-4 italic text-center"
           style={{ fontFamily: "'Lora', serif" }}
         >
           {config.dedicatedTo || "~luôn vui vẻ nhó~"}
         </p>
 
         {/* Trái tim trang trí */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-px w-10 sm:w-16 bg-pink-300" />
-          <span className="text-pink-400 text-base animate-pulse">❤️</span>
-          <div className="h-px w-10 sm:w-16 bg-pink-300" />
+        <div className="flex items-center gap-3 mb-3 md:mb-4">
+          <div className="h-px w-10 sm:w-16 md:w-20 bg-pink-300" />
+          <span className="text-pink-400 text-base md:text-lg animate-pulse">❤️</span>
+          <div className="h-px w-10 sm:w-16 md:w-20 bg-pink-300" />
         </div>
 
-        {/* Khung phát Video (Đã xóa bỏ 3 ảnh Polaroid theo yêu cầu) */}
-        <div className="w-full bg-white/85 backdrop-blur-md rounded-2xl sm:rounded-3xl shadow-xl p-3 sm:p-5 border border-white/60">
+        {/* Khung phát Video */}
+        <div className="w-full bg-white/90 backdrop-blur-md rounded-2xl md:rounded-3xl shadow-xl p-3 sm:p-4 md:p-5 border border-white/80">
           {!videoError ? (
             <div className="flex flex-col items-center">
               <video
                 controls
                 playsInline
-                className="w-full rounded-xl sm:rounded-2xl shadow-md overflow-hidden bg-black aspect-video object-cover"
+                preload="metadata"
+                className="w-full rounded-xl md:rounded-2xl shadow-md overflow-hidden bg-black aspect-video object-cover"
                 src={videoSrc}
-                onError={() => setVideoError(true)}
+                onPlay={handlePlay}
+                onPause={handlePause}
+                onEnded={handlePause}
+                onError={handleVideoError}
               >
                 Trình duyệt của bạn không hỗ trợ thẻ video.
               </video>
-              <div className="mt-3 flex items-center justify-between w-full px-1">
-                <span className="text-[11px] sm:text-xs text-gray-500 italic" style={{ fontFamily: "'Lora', serif" }}>
-                  🎬 Video dành riêng cho mắm thúi
-                </span>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-[11px] sm:text-xs text-rose-500 hover:text-rose-600 underline cursor-pointer"
-                  style={{ fontFamily: "'Lora', serif" }}
+
+              {/* Dòng chữ dưới video */}
+              <div className="mt-3 md:mt-3.5 flex items-center justify-center w-full px-2 text-center">
+                <p
+                  className="text-sm sm:text-base md:text-xl text-rose-500 font-bold tracking-wide"
+                  style={{ fontFamily: "'Dancing Script', cursive" }}
                 >
-                  Đổi video khác
-                </button>
+                  Tiến Thương with love, Trúc Ly ❤️
+                </p>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center p-6 sm:p-8 border-2 border-dashed border-rose-300 rounded-xl sm:rounded-2xl bg-rose-50/50 text-center">
+            <div className="flex flex-col items-center justify-center p-6 md:p-8 border-2 border-dashed border-rose-300 rounded-xl md:rounded-2xl bg-rose-50/50 text-center">
               <span className="text-4xl sm:text-5xl mb-2 animate-bounce">🎬</span>
               <h3
-                className="text-lg sm:text-xl font-bold text-rose-600 mb-1"
+                className="text-lg md:text-xl font-bold text-rose-600 mb-1"
                 style={{ fontFamily: "'Dancing Script', cursive" }}
               >
-                Khu vực video kỷ niệm
+                Tiến Thương with love, Trúc Ly ❤️
               </h3>
               <p
-                className="text-gray-600 text-[11px] sm:text-xs mb-3 leading-relaxed max-w-xs"
+                className="text-gray-600 text-xs md:text-sm mb-3 leading-relaxed max-w-sm"
                 style={{ fontFamily: "'Lora', serif" }}
               >
-                Đặt file video của bạn vào thư mục web với tên:
-                <br />
-                <code className="inline-block mt-1 bg-white text-rose-500 font-bold px-2 py-0.5 rounded border border-rose-200 text-xs shadow-sm">
-                  video.mp4
-                </code>
+                Vui lòng kiểm tra file video trong thư mục web!
               </p>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 bg-rose-400 hover:bg-rose-500 active:scale-95 text-white rounded-full text-xs font-semibold transition-all shadow-md cursor-pointer flex items-center gap-1.5"
-                style={{ fontFamily: "'Lora', serif" }}
-              >
-                <span>📁</span> Chọn video từ máy để xem ngay
-              </button>
             </div>
           )}
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="video/*"
-            className="hidden"
-            onChange={handleFileChange}
-          />
         </div>
       </div>
     </div>

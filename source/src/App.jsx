@@ -177,7 +177,19 @@ export default function App() {
   }
 
   if (screen === "letter") {
-    return <LetterScreen config={config} />;
+    return (
+      <LetterScreen
+        config={config}
+        onPlayVideo={() => {
+          if (audioRef.current) {
+            audioRef.current.pause();
+          }
+        }}
+        onPauseVideo={() => {
+          // Video tạm dừng
+        }}
+      />
+    );
   }
 
   return null;

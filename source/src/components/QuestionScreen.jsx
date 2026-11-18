@@ -4,18 +4,27 @@ export default function QuestionScreen({ config, onAccept }) {
   const [noCount, setNoCount] = useState(0);
   const [noPos, setNoPos] = useState(null);
 
-  // Giới hạn độ phóng to vừa vặn trên màn hình điện thoại
-  const yesBtnSize = Math.min(noCount * 10 + 20, 50);
+  const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
+  // Độ lớn nút Tiến Thương: vừa vặn, không bị phóng quá to
+  const yesBtnSize = isDesktop
+    ? Math.min(noCount * 8 + 20, 52)
+    : Math.min(noCount * 6 + 18, 42);
 
   const handleNoClick = () => {
     setNoCount(prev => prev + 1);
-    const btnW = 120;
-    const btnH = 45;
-    const pad = 16;
-    const maxX = Math.max(pad, window.innerWidth - btnW - pad);
-    const maxY = Math.max(pad + 40, window.innerHeight - btnH - pad);
-    const x = Math.floor(Math.random() * (maxX - pad)) + pad;
-    const y = Math.floor(Math.random() * (maxY - (pad + 40))) + pad + 40;
+
+    // Vùng đệm an toàn
+    const btnW = isDesktop ? 150 : 125;
+    const btnH = isDesktop ? 55 : 48;
+    const padX = isDesktop ? 30 : 20;
+    const padTop = isDesktop ? 50 : 80;
+    const padBottom = isDesktop ? 45 : 60;
+
+    const maxX = Math.max(padX, window.innerWidth - btnW - padX);
+    const maxY = Math.max(padTop, window.innerHeight - btnH - padBottom);
+
+    const x = Math.floor(Math.random() * (maxX - padX)) + padX;
+    const y = Math.floor(Math.random() * (maxY - padTop)) + padTop;
     setNoPos({ x, y });
   };
 
@@ -26,24 +35,29 @@ export default function QuestionScreen({ config, onAccept }) {
   const yesText = config.yesText || "Tiến Thương";
 
   return (
-    <div className="min-h-[100dvh] h-[100dvh] max-h-[100dvh] overflow-hidden flex flex-col items-center justify-center px-4 -mt-4 select-none">
+    <div className="min-h-[100dvh] h-[100dvh] max-h-[100dvh] overflow-hidden flex flex-col items-center justify-center px-4 md:px-6 select-none safe-area">
+      {/* Gấu cute - Vừa vặn trên laptop và mobile */}
       <img
-        className="h-[140px] sm:h-[180px] object-contain drop-shadow-sm"
+        className="h-[140px] sm:h-[165px] md:h-[195px] object-contain drop-shadow-sm mb-2 md:mb-3"
         src={config.bearRoseGif}
         alt="Cute bear with roses"
       />
+
+      {/* Câu hỏi - Kích thước cân đối, dễ nhìn */}
       <h1
-        className="my-4 text-2xl sm:text-4xl text-center text-gray-800 max-w-lg leading-snug px-2"
+        className="my-3 md:my-4 text-2xl sm:text-3xl md:text-4xl text-center text-gray-800 max-w-sm sm:max-w-md md:max-w-2xl leading-snug px-2"
         style={{ fontFamily: "'Dancing Script', cursive" }}
       >
         {config.question}
       </h1>
+
+      {/* Nút bấm */}
       <div
-        className="flex items-center gap-3 sm:gap-4 mt-2"
+        className="flex items-center gap-3 sm:gap-5 md:gap-6 mt-2 md:mt-4"
         style={{ fontFamily: "'Lora', serif" }}
       >
         <button
-          className="rounded-xl bg-green-500 px-5 py-2 sm:px-6 sm:py-2.5 font-bold text-white hover:bg-green-600 active:scale-95 transition-all cursor-pointer shadow-md whitespace-nowrap"
+          className="rounded-2xl bg-green-500 px-6 py-2.5 sm:px-7 sm:py-3 md:px-8 md:py-3.5 font-bold text-white hover:bg-green-600 active:scale-95 transition-all cursor-pointer shadow-md whitespace-nowrap"
           style={{ fontSize: `${yesBtnSize}px` }}
           onClick={onAccept}
         >
@@ -51,7 +65,7 @@ export default function QuestionScreen({ config, onAccept }) {
         </button>
         <button
           onClick={handleNoClick}
-          className="rounded-xl bg-red-500 px-5 py-2 sm:px-6 sm:py-2.5 font-bold text-white hover:bg-red-600 active:scale-95 transition-all duration-150 cursor-pointer shadow-md whitespace-nowrap text-base"
+          className="rounded-2xl bg-red-500 px-6 py-2.5 sm:px-7 sm:py-3 md:px-8 md:py-3.5 font-bold text-white hover:bg-red-600 active:scale-95 transition-all duration-150 cursor-pointer shadow-md whitespace-nowrap text-base sm:text-lg md:text-xl"
           style={noPos ? { position: "fixed", left: `${noPos.x}px`, top: `${noPos.y}px`, zIndex: 50 } : {}}
         >
           {noText}

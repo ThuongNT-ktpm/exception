@@ -12,12 +12,14 @@ html, body, #root {
   touch-action: manipulation;
 }
 
-.animate-shake {
-  animation: shake 0.4s ease-in-out;
+/* Base animation states - default to visible for accessibility & reduced motion */
+.animate-fade-in {
+  opacity: 1;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
 }
 
 .floating-heart {
@@ -35,6 +37,91 @@ html, body, #root {
   animation: blink 0.8s step-end infinite;
 }
 
+/* Đèn đom đóm Fairy Lights */
+.fairy-light {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  animation: twinkle 2.2s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+/* Pet lắc lư đung đưa */
+.pet-float {
+  animation: petSway 3.2s infinite ease-in-out;
+}
+
+.pet-float-reverse {
+  animation: petSwayRev 3.5s infinite ease-in-out;
+}
+
+@keyframes petSway {
+  0%, 100% {
+    transform: translateY(0) rotate(-2.5deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2.5deg);
+  }
+}
+
+@keyframes petSwayRev {
+  0%, 100% {
+    transform: translateY(0) rotate(2.5deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-2.5deg);
+  }
+}
+
+/* Pháo hoa tim khi click vào Pet */
+.heart-sparkle {
+  position: absolute;
+  font-size: 1.25rem;
+  animation: burstOut 1.1s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes burstOut {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6);
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(var(--tx), var(--ty)) scale(1.35);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), calc(var(--ty) - 22px)) scale(0.9);
+  }
+}
+
+/* Bé Cupid bay bồng bềnh */
+.cupid-fly {
+  animation: cupidFloat 4s infinite ease-in-out;
+}
+
+@keyframes cupidFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1.5deg);
+  }
+}
+
 @keyframes shake {
   0%, 100% {
     transform: translate(0);
@@ -50,7 +137,7 @@ html, body, #root {
 @keyframes fadeIn {
   0% {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
@@ -76,4 +163,63 @@ html, body, #root {
   50% {
     opacity: 0;
   }
+}
+
+/* =========================================================
+   TỐI ƯU GIẢM CHUYỂN ĐỘNG (PREFERS-REDUCED-MOTION: REDUCE)
+   Xử lý khi Laptop / Windows / macOS / iOS bật chế độ giảm chuyển động
+   Đảm bảo không bị giật, không bị ẩn phần tử, nội dung hiển thị ngay lập tức
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .animate-shake {
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .floating-heart {
+    opacity: 0.4 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .fairy-light {
+    animation: none !important;
+    opacity: 0.8 !important;
+  }
+
+  .pet-float, .pet-float-reverse, .cupid-fly {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .heart-sparkle {
+    display: none !important;
+  }
+}
+
+/* Tối ưu Safe Area cho iPhone 13, 14 Pro, 15 (Dynamic Island & Home Indicator) */
+.safe-top {
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+.safe-area {
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
 }
